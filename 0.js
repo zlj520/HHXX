@@ -688,8 +688,8 @@ function do_zhuanxiang() {
   // 下面是倒序答题
   if (zhuanxiang_dao) {
     // 当出现已满分时，点击最后一个开始答题
-    while (!text("已满分").exists()) {
-      scoll.scrollbackwards();
+    while (!text("2018/12/18").exists()) {
+      scoll.scrollForward();
       // 不加延迟会很卡
       sleep(200);
     }
