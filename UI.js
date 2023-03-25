@@ -645,9 +645,9 @@ ui.ttxs_pro_reset.click(function () {
     ui.ttxs_pro_wenzhang.setChecked(TTXS_PRO_CONFIG.get("wenzhang"));
     TTXS_PRO_CONFIG.put("meiri", true);
     ui.ttxs_pro_meiri.setChecked(TTXS_PRO_CONFIG.get("meiri"));
-    TTXS_PRO_CONFIG.put("meizhou", 0);
+    TTXS_PRO_CONFIG.put("meizhou", 1);
     ui.ttxs_pro_meizhou.setSelection(TTXS_PRO_CONFIG.get("meizhou"));
-    TTXS_PRO_CONFIG.put("zhuanxiang", 0);
+    TTXS_PRO_CONFIG.put("zhuanxiang", 1);
     ui.ttxs_pro_zhuanxiang.setSelection(TTXS_PRO_CONFIG.get("zhuanxiang"));
     TTXS_PRO_CONFIG.put("tiaozhan", true);
     ui.ttxs_pro_tiaozhan.setChecked(TTXS_PRO_CONFIG.get("tiaozhan"));
