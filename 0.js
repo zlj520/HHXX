@@ -689,7 +689,7 @@ function do_zhuanxiang() {
   if (zhuanxiang_dao) {
     // 当出现已满分时，点击最后一个开始答题
     while (!text("已满分").exists()) {
-      scoll.scrollForward();
+      scoll.backwards();
       // 不加延迟会很卡
       sleep(200);
     }
