@@ -8,28 +8,29 @@ var watchdog = TTXS_PRO_CONFIG.get("watchdog", "1800");
 var slide_verify = TTXS_PRO_CONFIG.get("slide_verify", "300");
 var fast_mode = TTXS_PRO_CONFIG.get("fast_mode", false);
 var ddtong = TTXS_PRO_CONFIG.get("ddtong", false);
-var is_exit = TTXS_PRO_CONFIG.get("is_exit", false);
+var is_exit = TTXS_PRO_CONFIG.get("is_exit", true);
 var pinglun = TTXS_PRO_CONFIG.get("pinglun", true);
 var shipin = TTXS_PRO_CONFIG.get("shipin", true);
 var wenzhang = TTXS_PRO_CONFIG.get("wenzhang", true);
 var meiri = TTXS_PRO_CONFIG.get("meiri", true);
-var meizhou = TTXS_PRO_CONFIG.get("meizhou", 1);
-var zhuanxiang = TTXS_PRO_CONFIG.get("zhuanxiang", 1);
+var meizhou = TTXS_PRO_CONFIG.get("meizhou", 0);
+var zhuanxiang = TTXS_PRO_CONFIG.get("zhuanxiang", 0);
 var tiaozhan = TTXS_PRO_CONFIG.get("tiaozhan", true);
 var ocr_choice = TTXS_PRO_CONFIG.get("ocr_choice", 0);
 var ocr_maxtime = TTXS_PRO_CONFIG.get("ocr_maxtime", "5000");
 var duizhan_mode = TTXS_PRO_CONFIG.get("duizhan_mode", 0);
 var jisu = TTXS_PRO_CONFIG.get("jisu", "0");
-var guaji = TTXS_PRO_CONFIG.get("guaji", false);
+var guaji = TTXS_PRO_CONFIG.get("guaji", true);
 var siren = TTXS_PRO_CONFIG.get("siren", true);
-var dacuo_num = TTXS_PRO_CONFIG.get("dacuo_num", "0");
+var dacuo_num = TTXS_PRO_CONFIG.get("dacuo_num", "2");
 var shuangren = TTXS_PRO_CONFIG.get("shuangren", true);
 var bendi = TTXS_PRO_CONFIG.get("bendi", true);
-var dingyue = TTXS_PRO_CONFIG.get("dingyue", 2);
+var dingyue = TTXS_PRO_CONFIG.get("dingyue", 0);
 var pushplus = TTXS_PRO_CONFIG.get("pushplus", "");
 var yl_on = TTXS_PRO_CONFIG.get("yl_on", true);
 var yinliang = TTXS_PRO_CONFIG.get("yinliang", "0");
 var zhanghao = TTXS_PRO_CONFIG.get("zhanghao", "");
+var comment = TTXS_PRO_CONFIG.get("comment", "全心全意为人民服务|不忘初心，牢记！使命|不忘初心，方得始终|永远坚持！党的领导|富强、民主、文明、和谐|自由，平等，公正，法治");
 
 function google_ocr_api(img) {
   console.log('GoogleMLKit文字识别中');
@@ -120,24 +121,21 @@ sleep(delay_time);
 /*****************更新内容弹窗部分*****************/
 var storage = storages.create('songgedodo');
 // 脚本版本号
-var last_version = "V10.11";
-var engine_version = "V11.2";
-var newest_version = "V11.5";
+var last_version = "V12.0";
+var engine_version = "V12.3";
+var newest_version = "V12.4";
 if (storage.get(engine_version, true)) {
   storage.remove(last_version);
-  let gengxin_rows = ["最新版本强国APP不支持多人对战，切勿更新！",
-    "强国APP版本v2.33.0以上不支持订阅，可以在豌豆荚中下载历史版本",
-    "（点击取消不再提示）"
-  ];
+  let gengxin_rows = "脚本有风险，仅供学习交流;更新内容：;1.原脚本会进入“我的”界面获取用户名，区分历史刷过文章，现取消此设定;2.可自定义滑动验证界面震动提醒时间;3.禁止截屏会随机选一个选项;4.自定义评论内容;脚本测试环境：腾讯游戏V2.0;（点击取消不再提示）".split(";");
   let is_show = confirm(engine_version + "版更新内容", gengxin_rows.join("\n"));
   if (!is_show) {
     storage.put(engine_version, false);
   }
 }
 var w = fInit();
-// console.setTitle("好好学习");
+// console.setTitle("腾讯游戏pro");
 // console.show();
-fInfo("好好学习Pro" + newest_version + "脚本初始化");
+fInfo("腾讯游戏pro" + newest_version + "脚本初始化");
 // 初始化宽高
 var [device_w, device_h] = init_wh();
 // log("fina:", device_w, device_h);
@@ -186,7 +184,7 @@ fInfo("设置屏幕常亮");
 device.keepScreenOn(3600 * 1000);
 // 下载题库
 fInfo("检测题库更新");
-const update_info = get_tiku_by_http("http://mkdir.cc/XXQG/Better-Auto-XXQG/main/tiku/info.json");
+const update_info = get_tiku_by_http("https://v.sec-an-cf.top/gh/raw/sec-an/Better-Auto-XXQG/main/tiku/info.json");
 fInfo("正在加载对战题库......请稍等\n题库版本:" + update_info["tiku_version"]);
 fInfo("如果不动就是正在下载，多等会");
 var tiku = [];
@@ -205,7 +203,7 @@ try {
   dati_tiku = get_tiku_by_ct('https://webapi.ctfile.com/get_file_url.php?uid=35157972&fid=555754562&file_chk=94c3c662ba28f583d2128a1eb9d78af4&app=0&acheck=2&rd=0.14725283060014105');
 }
 // 设置资源保存路径
-files.createWithDirs("/sdcard/好好学习/");
+files.createWithDirs("/sdcard/腾讯游戏/");
 // 调整音量
 if (yl_on) {
   fInfo("设置媒体音量");
@@ -217,7 +215,7 @@ if (yl_on) {
   fInfo("当前音量：" + device.getMusicVolume());
 }
 if (is_exit) {
-  fInfo("运行前重置学习APP");
+  fInfo("运行前重置腾讯游戏APP");
   exit_app("学习强国");
   sleep(1500);
 }
@@ -277,8 +275,11 @@ function do_pinglun() {
     fRefocus();
   }
   fInfo("评论框click: true");
-  let content_list = ["全心全意为人民服务", "不忘初心，牢记使命", "不忘初心，方得始终", "永远坚持党的领导", "富强、民主、文明、和谐", "自由，平等，公正，法治"];
-  classNameEndsWith("EditText").findOne().setText(content_list[random(0, content_list.length - 1)]);
+  let content_list = comment.split("|");
+  log("评论列表：", content_list);
+  content_list = content_list[random(0, content_list.length - 1)];
+  content_list || (fTips('评论内容不可设置为空，已重置为"不忘初心，牢记使命"'), content_list = "不忘初心，牢记使命");
+  classNameEndsWith("EditText").findOne().setText(content_list);
   sleep(1000);
   text("发布").findOne().click();
   sleep(1000);
@@ -324,12 +325,12 @@ function do_shipin() {
   }
   desc("百灵").findOne().click();
   let shu = text("竖").findOne();
-  sleep(1000);
+  sleep(1500);
   // 定位到整个百灵frame_box
   let frame_box = shu.parent().parent().parent().parent();
   textMatches(/\d{2}:\d{2}/).waitFor();
   let video_list = frame_box.findOne(className("android.widget.ListView"));
-  video_list.child(1).child(1).child(0).click();
+  video_list.child(1).child(1).child(0).click() || fInfo("尝试再次点击" + video_list.child(1).child(1).child(0).child(0).click());
   text("分享").waitFor();
   if (idContains("guide_view").findOne(1500)) {
     fInfo("检测到引导遮罩");
@@ -487,7 +488,7 @@ function do_wenzhang() {
         // 第6次停顿刷时间
         //console.show();   
         toastLog("正在刷时长程序未停止");
-        let shichang = 6 * random(55, 60);
+        let shichang = random(330, 360);
         fClear();
         fInfo("开始刷时长，总共" + shichang + "秒");
         let wait_time = 1;
@@ -812,28 +813,32 @@ function do_tiaozhan() {
     var a = !0,
       b = className("android.widget.Image").textStartsWith("total").findOne().parent();
     ran_sleep();
+    // do b.click(), sleep(500); while (textStartsWith("total").exists());
     b.click();
     className("android.widget.Image").textStartsWith("chanllenge").waitFor()
   }
-  let total = 0;
-  let max_total = 5;
-  if (ddtong) {
-    max_total += 10;
-  }
-  while (true) {
+  var total = 0, max_total = 5;
+  for (ddtong && (max_total += 10);;) {
     fClear();
     fInfo("第" + (total + 1) + "题");
-    // 等待选项列表
-    let xuan_list = className("android.widget.ListView").findOne().children();
-    // 获取题目
-    let que_txt = className("android.widget.ListView").findOne().parent().child(0).text();
-    //log(que_txt);
+    className("android.widget.ListView").waitFor();
+    ran_sleep();
+    try {
+      // 等待选项列表
+      var xuan_list = className("android.widget.ListView").findOne().children();
+      // 获取题目
+      var que_txt = className("android.widget.ListView").findOne().parent().child(0).text();
+      //log(que_txt);
+    } catch (p) {
+      log("error1:", p);
+      sleep(500);
+      continue;
+    }    
     // 获取答案列表，可能找到多个答案
     // let ans_list = get_ans_by_http(que_txt.replace(/来源：.*|出题单位：.+/, ""));
     let ans_list = get_ans_by_tiku(que_txt.replace(/[^\u4e00-\u9fa5\d]|来源：.+|出题单位：.+/g, ""));
     //     fInfo(que_txt.replace(/[^\u4e00-\u9fa5\d]|来源：.+|出题单位：.+/g, ""));
     //log("答案："+ans_list);
-    ran_sleep();
     if (total >= max_total) {
       // 题数数够了随便选
       fInfo("已答对" + max_total + "题，全选A");
@@ -1040,7 +1045,7 @@ function do_duizhan1(renshu) {
       continue;
     }
     //fTips("开始识别题目");
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 1; i++) {
       let img = captureScreen();
       // 裁剪题干区域，识别题干
       let que_img = images.clip(img, que_x, que_y, que_w, que_h);
@@ -1060,19 +1065,15 @@ function do_duizhan1(renshu) {
         var que_txt = ocr.recognizeText(que_img).replace(/[^\u4e00-\u9fa5\d]|\d{1,2}\./g, "");
       }
       console.timeEnd('题目识别');
-      if (!que_txt) {
-        images.save(img, '/sdcard/好好学习/' + renshu + '-' + num + '.png', 'png', 50);
-        images.save(que_img, '/sdcard/好好学习/' + renshu + '-' + num + '-q.png', 'png', 50);
-        fError("未识别出题目，图片保存至‘/sdcard/好好学习/’");
-        console.error("大概率无障碍服务失效" + auto.service);
-        console.error("题目框体范围：", que_x, que_y, que_w, que_h);
-        img.recycle();
-        que_img.recycle();
-      } else {
+      if (que_txt) {
         fInfo("题目识别：" + que_txt);
         img.recycle();
         que_img.recycle();
         break
+      } else {
+        fError("未识别出题目，可能被禁止截图或无障碍失效");
+        img.recycle();
+        que_img.recycle();
       }
     }
     if (renshu == 0) {
@@ -1191,8 +1192,7 @@ function do_duizhan1(renshu) {
     console.timeEnd("选项识别");
     // log(allx_txt);
     if (!allx_txt) {
-      images.save(img, '/sdcard/好好学习/' + renshu + '-' + num + '-a.png', 'png', 50);
-      log("识别不出选项文本，图片保存至‘/sdcard/好好学习/’");
+      log("识别不出选项文本，可能被禁止截图");
       err_flag = false;
       sleep(200);
       continue;
@@ -1295,9 +1295,9 @@ function do_duizhan1(renshu) {
         }
       }
     } else {
-      console.warn("未识别出选项");
+      fError("未识别出选项，随机选择");
+      className("android.widget.RadioButton").findOnce(random(0, radio_num - 1)).parent().click();
       err_flag = false;
-      sleep(200);
       continue;
     }
     num++;
@@ -2178,7 +2178,7 @@ function init_wh() {
     fError("设备屏幕方向检测为横向，后续运行很可能会报错，建议调整后重新运行脚本");
     sleep(10000);
   } else if (device.width == 0 || device.height == 0) {
-    fError("识别不出设备宽高，建议重启强国助手后重新运行脚本");
+    fError("识别不出设备宽高，建议重启腾讯游戏后重新运行脚本");
     sleep(10000);
   }
   return [device_w, device_h]
@@ -2227,7 +2227,7 @@ function ocr_test() {
     fInfo("OCR识别结束:" + test_time + "ms");
     if (test_time > test_limit) {
       fError("OCR识别过慢(>" + test_limit + "ms)，已跳过多人对战，可在配置中设置跳过阈值");
-      fError("如偶然变慢，可能为无障碍服务抽风，建议重启强国助手后重试");
+      fError("如偶然变慢，可能为无障碍服务抽风，建议重启腾讯游戏后重试");
       sleep(3000);
       return false
     } else {
@@ -2272,7 +2272,7 @@ function send_pushplus(token, sign_list) {
   content_str += '</div>' + style_str;
   let r = http.postJson("http://www.pushplus.plus/send", {
     token: token,
-    title: "好好学习：" + name,
+    title: "腾讯游戏：" + name,
     content: content_str + "</div><style>.item{height:1.5em;line-height:1.5em;}.item span{display:inline-block;padding-left:0.4em;}.item .bar{width:100px;height:10px;background-color:#ddd;border-radius:5px;display:inline-block;}.item .bar div{height:10px;background-color:#ed4e45;border-radius:5px;}</style>",
     template: "markdown",
   });
@@ -2297,7 +2297,7 @@ function send_email(email) {
     action: "SENDTO"
   });
   data.setData(app.parseUri("mailto:" + e_addr));
-  data.putExtra(Intent.EXTRA_SUBJECT, "好好学习：" + name);
+  data.putExtra(Intent.EXTRA_SUBJECT, "腾讯游戏：" + name);
   data.putExtra(Intent.EXTRA_TEXT, content);
   app.startActivity(data);
   return true;
@@ -2398,61 +2398,20 @@ function winReshow() {
 }
 
 function noverify() {
-  let noverify_thread = threads.start(function () {
-    //在新线程执行的代码
-    while (true) {
-      textContains("请按照说明拖动滑块").waitFor();
-      fInfo("检测到滑动验证");
-      if (!Number(slide_verify)) {
-        fInfo("未开启自动验证");
-        break
-      } else {
-        var delay = Number(slide_verify);
-      }
-      text("请按照说明拖动滑块").waitFor();
-      let bound = textContains("请按照说明拖动滑块").findOne().parent().child(1).bounds();
-      let hua_bound = text("请按照说明拖动滑块").findOne().bounds();
-      let x_start = bound.centerX();
-      let dx = x_start - hua_bound.left;
-      let x_end = (hua_bound.right - dx) * random(5.1, 6.0) / 10; // “hua_bound.right - dx”表示拖动到最后，为了准确率更高点 拖动到一半左右即可
-      let x_mid = (x_end - x_start) * random(5, 7) / 10 + x_start;
-      let back_x = (x_end - x_start) * random(2, 3) / 10;
-      let y_start = random(bound.top, bound.bottom);
-      let y_end = random(bound.top, bound.bottom);
-      // log("y_start:", y_start, "x_start:", x_start, "x_mid:", x_mid, "x_end:", x_end);
-      x_start = random(x_start - 7, x_start);
-      x_end = random(x_end, x_end + 10);
-      gesture(random(delay, delay + 200), [x_start, y_start], [x_end, y_end]);
-      //swipe(x_start, y_start, x_end, y_end, random(900,1000));
-      sleep(random(1000, 1500));
-      while (textContains("滑动位置不对哦，请再试一次").exists()) {
-        text("请按照说明拖动滑块").waitFor();
-        text("icon/24/icon_Y_shuaxin").findOne().parent().click();
-        sleep(random(1000, 1500));
-        continue;
-      }
-      if (textContains("刷新").exists()) {
-        click("刷新");
-        sleep(random(1000, 1500));
-        continue;
-      }
-      if (textContains("网络开小差").exists()) {
-        click("确定");
-        sleep(random(1000, 1500));
-        continue;
-      }
-      if (text("当前功能使用人数过多，请稍后重试").exists()) {
-        click("确定");
-        id("btn_next").findOne().click();
-        sleep(random(1000, 1500));
-        continue;
-      }
-      fInfo("已完成滑动验证，若滑动失败请在Pro版配置中调整滑动时间");
-      sleep(1000);
+  return threads.start(function () {
+    for (;;) {
       fClear();
+      if (Number(slide_verify)) var a = Number(slide_verify);
+      else {
+        fInfo("未开启震动提醒");
+        break
+      }
+      textContains("访问异常").waitFor();
+      fInfo("检测到滑动验证，请尽快滑动");
+      device.vibrate(a);
+      textContains("刷新").exists() ? click("刷新") : textContains("网络开小差").exists() ? click("确定") : sleep(1000)
     }
   });
-  return noverify_thread;
 }
 
 function displayProp(obj) {
@@ -2470,7 +2429,7 @@ function fInit() {
     <card cardCornerRadius='8dp' alpha="0.8">
       <vertical>
         <horizontal bg='#FF000000' padding='10 5'>
-        <text id='version' textColor="#FFFFFF" textSize="18dip">好好学习+</text>
+        <text id='version' textColor="#FFFFFF" textSize="18dip">腾讯游戏+</text>
         <text id='title' h="*" textColor="#FFFFFF" textSize="13dip" layout_weight="1" gravity="top|right"></text>
         </horizontal>
         <ScrollView>
@@ -2484,7 +2443,7 @@ function fInit() {
   );
   ui.run(function () {
     //w.title.setFocusable(true);
-    w.version.setText("好好学习+" + newest_version);
+    w.version.setText("腾讯游戏+" + newest_version);
   });
   w.setSize(720, -2);
   w.setPosition(10, 10);
@@ -2570,17 +2529,10 @@ function xxqg(userinfo) {
   if (userinfo) {
     var [username, pwd, token] = userinfo;
     login(username, pwd);
-  }
-  /********获取用户姓名并读取本地数据*********/
-  text("我的").findOne().click();
-  // name = id("my_display_name").findOne().text();
-  a = id("my_display_name").findOne(5000);
-  a || (f = confirm("无法识别内容", "检测到新版‘我的’界面，官方限制无法识别出内容，请退回xxqgV2.41.0版及以下%n点击确定跳转下载历史版本"),
-    sleep(800), back(), f && app.openUrl("https://www.wandoujia.com/apps/7920908/history_v23300"), exit());
-  name = a.text();
-  storage_user = storages.create('songgedodo:' + name);
+    storage_user = storages.create('songgedodo:' + username);
+    name = username.substr(0, 3) + "****" + username.substr(-4);
+  } else name = "", storage_user = storage;
   fSet("username", name);
-  back();
   ran_sleep();
   if (meizhou == 1) {
     meizhou_dao = false;
@@ -2638,23 +2590,27 @@ function xxqg(userinfo) {
   back();
   b = 1;
   if (2 != meizhou) {
-    toastLog("每周答题开始");
-    text("我的").findOne().click();
-    sleep(1000);
-    text("我要答题").findOne().parent().click();
-    sleep(1000);
-    for (b = do_meizhou(); !b;) b = do_meizhou();
-    text("我的").waitFor();
-    b || fError("每周答题可能由于识别错误、包含视频题而不能满分，请手动作答")
+    if (toastLog("每周答题开始"), text("我的").findOne().click(), sleep(1000), text("我要答题").findOne(3000)) {
+      text("我要答题").findOne().parent().click();
+      sleep(1000);
+      for (b = do_meizhou(); !b;) b = do_meizhou();
+      text("我的").waitFor();
+      b || fError("每周答题可能由于识别错误、包含视频题而不能满分，请手动作答")
+    } else fError("V2.42及以上不支持每周答题"), back(), ran_sleep();   
   }
-  0 == dingyue || d || fError("未能识别出订阅界面，订阅不支持学习强国V2.33.0以上版本");
+  0 == dingyue || d || fError("未能识别出订阅界面，订阅不支持腾讯游戏V2.0以上版本");
   if (!zhanghao) return !0;
-  text("我的").findOne().click();
+  b = text("我的").findOne();
+  log("mine:", b);
+  b.click();
   log("等待设置按钮");
-  b = id("my_setting").findOne();
-  sleep(1E3);
-  log("点击设置按钮");
-  real_click(b);
+  if (e = id("my_setting").findOne(3000)) sleep(1000), log("点击设置按钮"), real_click(e);
+  else {
+    swipe(device_w / 2, .8 * device_h, device_w / 2, .1 * device_h, 1000);
+    fInfo("minebounds: " + b.bounds());
+    sleep(6000);
+    do e = random(b.bounds().centerX(), b.bounds().right), c = b.bounds().centerY(), fInfo("点击设置按钮: " + e + "," + c), click(e, c); while (!id("setting_sign_out").findOne(1500))
+  }
   log("等待退出登录");
   b = id("setting_sign_out").findOne();
   sleep(1E3);
@@ -2692,7 +2648,7 @@ function main(userinfo) {
     } else {
       let xxqg_end = new Date();
       let spent_time = ((xxqg_end - xxqg_begin) / 1000).toFixed();
-      fInfo("本轮已正常结束，花费时间" + spent_time + "s");
+      fInfo("本轮已结束，花费时间" + spent_time + "s"), 600 > spent_time && fError("时间过短，请检查日志是报错导致脚本结束，正常结束请无视");
       return true
     }
   }
@@ -2760,6 +2716,7 @@ device.cancelKeepingAwake();
 // 震动提示
 device.vibrate(500);
 fInfo("十秒后关闭悬浮窗");
+device.cancelVibration();
 sleep(10000);
 console.hide();
 home();
