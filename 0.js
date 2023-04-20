@@ -121,9 +121,9 @@ sleep(delay_time);
 /*****************更新内容弹窗部分*****************/
 var storage = storages.create('songgedodo');
 // 脚本版本号
-var last_version = "V12.0";
-var engine_version = "V12.3";
-var newest_version = "V12.4";
+var last_version = "V1.0";
+var engine_version = "V2.2";
+var newest_version = "V2.3";
 if (storage.get(engine_version, true)) {
   storage.remove(last_version);
   let gengxin_rows = "脚本有风险，仅供学习交流;更新内容：;1.原脚本会进入“我的”界面获取用户名，区分历史刷过文章，现取消此设定;2.可自定义滑动验证界面震动提醒时间;3.禁止截屏会随机选一个选项;4.自定义评论内容;脚本测试环境：腾讯游戏V2.0;（点击取消不再提示）".split(";");
